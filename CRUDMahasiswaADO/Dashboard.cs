@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
@@ -17,30 +17,17 @@ namespace CRUDMahasiswaADO
         {
             InitializeComponent();
 
-            dtpTanggalMasuk.MinDate =
-                new DateTime(2000, 1, 1);
-
-            dtpTanggalMasuk.Format =
-                DateTimePickerFormat.Custom;
-
+            dtpTanggalMasuk.MinDate = new DateTime(2000, 1, 1);
+            dtpTanggalMasuk.Format = DateTimePickerFormat.Custom;
             dtpTanggalMasuk.CustomFormat = "yyyy";
-
             dtpTanggalMasuk.ShowUpDown = true;
-
             dtpTanggalMasuk.MaxDate = DateTime.Now;
 
-            cmbTipe.DropDownStyle =
-                ComboBoxStyle.DropDownList;
-
+            cmbTipe.DropDownStyle = ComboBoxStyle.DropDownList;
             var items = new List<KeyValuePair<string, SeriesChartType>>
             {
-                new KeyValuePair<string, SeriesChartType>(
-                    "Kolom",
-                    SeriesChartType.Column),
-
-                new KeyValuePair<string, SeriesChartType>(
-                    "Pie",
-                    SeriesChartType.Pie)
+                new KeyValuePair<string, SeriesChartType>("Kolom", SeriesChartType.Column),
+                new KeyValuePair<string, SeriesChartType>("Pie", SeriesChartType.Pie)
             };
 
             isInitializing = true;
@@ -51,11 +38,10 @@ namespace CRUDMahasiswaADO
             cmbTipe.SelectedIndex = 0;
 
             isInitializing = false;
-
-            LoadDataChart();
+            loadDataChart();
         }
 
-        public void LoadDataChart()
+        public void loadDataChart()
         {
             chartProdi.Series.Clear();
             chartProdi.Titles.Clear();
@@ -166,11 +152,11 @@ namespace CRUDMahasiswaADO
 
             if (button == 1)
             {
-                LoadDataChart();
+                loadDataChart();
             }
             else
             {
-                LoadDataChart();
+                loadDataChart();
             }
         }
 
@@ -179,7 +165,7 @@ namespace CRUDMahasiswaADO
             EventArgs e)
         {
             button = 1;
-            LoadDataChart();
+            loadDataChart();
         }
 
         private void btnReset_Click(
@@ -187,7 +173,7 @@ namespace CRUDMahasiswaADO
             EventArgs e)
         {
             button = 0;
-            LoadDataChart();
+            loadDataChart();
         }
 
         private void btnDataMahasiswa_Click(
