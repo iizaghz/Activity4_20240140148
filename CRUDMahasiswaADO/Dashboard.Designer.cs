@@ -1,4 +1,4 @@
-﻿namespace CRUDMahasiswaADO
+namespace CRUDMahasiswaADO
 {
     partial class Dashboard
     {
@@ -66,6 +66,7 @@
             this.btnLoad.TabIndex = 2;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = false;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnReset
             // 
@@ -76,6 +77,7 @@
             this.btnReset.TabIndex = 3;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // cmbTipe
             // 
@@ -87,6 +89,7 @@
             this.cmbTipe.Name = "cmbTipe";
             this.cmbTipe.Size = new System.Drawing.Size(121, 24);
             this.cmbTipe.TabIndex = 4;
+            this.cmbTipe.SelectedValueChanged += new System.EventHandler(this.cmbTipe_SelectedValueChanged);
             // 
             // chartProdi
             // 
@@ -112,6 +115,7 @@
             this.btnDataMahasiswa.TabIndex = 6;
             this.btnDataMahasiswa.Text = "Data Mahasiswa";
             this.btnDataMahasiswa.UseVisualStyleBackColor = true;
+            this.btnDataMahasiswa.Click += new System.EventHandler(this.btnDataMahasiswa_Click);
             // 
             // Dashboard
             // 
