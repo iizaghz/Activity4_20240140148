@@ -9,7 +9,7 @@ namespace CRUDMahasiswaADO
     public partial class Report : Form
     {
         static string connectionString =
-            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Persist Security Info=True;User ID=sa;Password=Kuliah01;TrustServerCertificate=True";
+            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True";
 
         SqlConnection conn = new SqlConnection(connectionString);
         SqlDataAdapter da;

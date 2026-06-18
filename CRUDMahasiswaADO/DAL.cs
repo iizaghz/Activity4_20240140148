@@ -7,7 +7,7 @@ namespace CRUDMahasiswaADO
     public class DAL
     {
         static string connectionString =
-            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Persist Security Info=True;User ID=sa;Password=Kuliah01;TrustServerCertificate=True";
+            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True";
 
         public string GetConnectionString()
         {
