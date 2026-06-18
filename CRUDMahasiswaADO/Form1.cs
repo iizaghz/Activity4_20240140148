@@ -93,16 +93,9 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        private void simpanLog(string pesan)
+        public void simpanLog(string message)
         {
-            try
-            {
-                dbLogic.InsertLog(pesan);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal simpan log: " + ex.Message);
-            }
+            dbLogic.InsertLog(message);
         }
 
         private void LoadData()
