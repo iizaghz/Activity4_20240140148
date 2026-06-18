@@ -65,9 +65,9 @@ namespace CRUDMahasiswaADO
             this.mahasiswaTableAdapter = new CRUDMahasiswaADO.DBAkademikADODataSetTableAdapters.MahasiswaTableAdapter();
             this.txtResetData = new System.Windows.Forms.Button();
             this.btnTestInjection = new System.Windows.Forms.Button();
-            this.lblTotal = new System.Windows.Forms.Label();
+            this.lblCountMhs = new System.Windows.Forms.Label();
             this.btnRekapData = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.fotoMhs = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -76,7 +76,7 @@ namespace CRUDMahasiswaADO
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fotoMhs)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -392,7 +392,7 @@ namespace CRUDMahasiswaADO
             this.txtResetData.TabIndex = 19;
             this.txtResetData.Text = "Reset Data";
             this.txtResetData.UseVisualStyleBackColor = false;
-            this.txtResetData.Click += new System.EventHandler(this.btnResetData_Click);
+            this.txtResetData.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // btnTestInjection
             // 
@@ -405,15 +405,15 @@ namespace CRUDMahasiswaADO
             this.btnTestInjection.UseVisualStyleBackColor = false;
             this.btnTestInjection.Click += new System.EventHandler(this.btnTestInjection_Click);
             // 
-            // lblTotal
+            // lblCountMhs
             // 
-            this.lblTotal.AutoSize = true;
-            this.lblTotal.BackColor = System.Drawing.Color.DarkOrange;
-            this.lblTotal.Location = new System.Drawing.Point(598, 253);
-            this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(109, 16);
-            this.lblTotal.TabIndex = 21;
-            this.lblTotal.Text = "Total Mahasiswa";
+            this.lblCountMhs.AutoSize = true;
+            this.lblCountMhs.BackColor = System.Drawing.Color.DarkOrange;
+            this.lblCountMhs.Location = new System.Drawing.Point(598, 253);
+            this.lblCountMhs.Name = "lblCountMhs";
+            this.lblCountMhs.Size = new System.Drawing.Size(109, 16);
+            this.lblCountMhs.TabIndex = 21;
+            this.lblCountMhs.Text = "Total Mahasiswa";
             // 
             // btnRekapData
             // 
@@ -425,13 +425,13 @@ namespace CRUDMahasiswaADO
             this.btnRekapData.Text = "RekapData";
             this.btnRekapData.Click += new System.EventHandler(this.btnRekapData_Click);
             // 
-            // pictureBox1
+            // fotoMhs
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(607, 56);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
-            this.pictureBox1.TabIndex = 23;
-            this.pictureBox1.TabStop = false;
+            this.fotoMhs.Location = new System.Drawing.Point(607, 56);
+            this.fotoMhs.Name = "fotoMhs";
+            this.fotoMhs.Size = new System.Drawing.Size(100, 50);
+            this.fotoMhs.TabIndex = 23;
+            this.fotoMhs.TabStop = false;
             // 
             // button1
             // 
@@ -441,6 +441,7 @@ namespace CRUDMahasiswaADO
             this.button1.TabIndex = 24;
             this.button1.Text = "Upload Gambar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // button2
             // 
@@ -450,6 +451,7 @@ namespace CRUDMahasiswaADO
             this.button2.TabIndex = 25;
             this.button2.Text = "Import from Excel";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.btnImpDb_Click);
             // 
             // button3
             // 
@@ -459,6 +461,7 @@ namespace CRUDMahasiswaADO
             this.button3.TabIndex = 26;
             this.button3.Text = "Import from Excel";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.btnImpExcel_Click);
             // 
             // Form1
             // 
@@ -469,9 +472,9 @@ namespace CRUDMahasiswaADO
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.fotoMhs);
             this.Controls.Add(this.btnRekapData);
-            this.Controls.Add(this.lblTotal);
+            this.Controls.Add(this.lblCountMhs);
             this.Controls.Add(this.btnTestInjection);
             this.Controls.Add(this.txtResetData);
             this.Controls.Add(this.bindingNavigator1);
@@ -502,7 +505,7 @@ namespace CRUDMahasiswaADO
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fotoMhs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -545,9 +548,9 @@ namespace CRUDMahasiswaADO
         private DBAkademikADODataSetTableAdapters.MahasiswaTableAdapter mahasiswaTableAdapter;
         private System.Windows.Forms.Button txtResetData;
         private System.Windows.Forms.Button btnTestInjection;
-        private System.Windows.Forms.Label lblTotal;
+        private System.Windows.Forms.Label lblCountMhs;
         private System.Windows.Forms.Label btnRekapData;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox fotoMhs;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
