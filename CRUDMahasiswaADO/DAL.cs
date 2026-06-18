@@ -261,7 +261,7 @@ namespace CRUDMahasiswaADO
             }
 
             SqlCommand cmd =
-                new SqlCommand("select namaprodi from prodi", conn);
+                new SqlCommand("select namaprodi from programstudi", conn);
 
             cmd.CommandType = CommandType.Text;
 
