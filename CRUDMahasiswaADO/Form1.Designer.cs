@@ -449,7 +449,7 @@ namespace CRUDMahasiswaADO
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(103, 45);
             this.button2.TabIndex = 25;
-            this.button2.Text = "Import from Excel";
+            this.button2.Text = "Import to Database";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.btnImpDb_Click);
             // 
