@@ -9,15 +9,8 @@ namespace CRUDMahasiswaADO
     {
         public static string GetLoacalIPAddress()
         {
-            try
-            {
-                // Mengembalikan Hostname komputer agar koneksi Integrated Security dipercaya oleh SQL Server.
-                return System.Net.Dns.GetHostName();
-            }
-            catch
-            {
-                return "localhost";
-            }
+            // Mengembalikan hostname server "IZAYAAA" agar client di jaringan lokal terhubung ke database server.
+            return "IZAYAAA";
         }
 
         public static string GetConnectionString()
