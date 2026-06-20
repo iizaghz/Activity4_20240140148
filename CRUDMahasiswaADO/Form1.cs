@@ -25,7 +25,7 @@ namespace CRUDMahasiswaADO
 
         private readonly SqlConnection conn;
         private readonly string connectionString =
-            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True";
+            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;User ID=mhs;Password=mhs123;";
 
         public Form1()
         {
