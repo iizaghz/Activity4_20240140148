@@ -56,7 +56,7 @@ namespace CRUDMahasiswaADO
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(dbLogic.GetConnectionString()))
+                using (SqlConnection conn = new SqlConnection(DAL.GetConnectionString()))
                 {
                     conn.Open();
                     MessageBox.Show("Koneksi Berhasil");
