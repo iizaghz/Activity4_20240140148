@@ -124,6 +124,15 @@ namespace CRUDMahasiswaADO
             }
             catch (Exception ex)
             {
+                string cols = "";
+                if (dataGridView1.Columns != null)
+                {
+                    foreach (DataGridViewColumn c in dataGridView1.Columns)
+                    {
+                        cols += $"{c.Name}: {c.GetType().Name} (DataProperty: {c.DataPropertyName})\n";
+                    }
+                }
+                MessageBox.Show($"Error: {ex.Message}\n\nColumns:\n{cols}");
                 simpanLog(ex.Message);
                 MessageBox.Show("Gagal load data: " + ex.Message);
             }

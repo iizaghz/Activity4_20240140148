@@ -9,56 +9,21 @@ namespace CRUDMahasiswaADO
     {
         public static string GetLoacalIPAddress()
         {
-            string localIP = string.Empty;
             try
             {
-                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
-                foreach (var ip in host.AddressList)
-                {
-                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                    {
-                        localIP = ip.ToString();
-                        break;
-                    }
-                }
+                // Mengembalikan Hostname komputer agar koneksi Integrated Security dipercaya oleh SQL Server.
+                return System.Net.Dns.GetHostName();
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Error getting local IP address: " + ex.Message);
+                return "localhost";
             }
-            return localIP;
         }
 
         public static string GetConnectionString()
         {
-            string ipAddress = GetLoacalIPAddress();
-            
-            // 1. Coba menggunakan IP Address + Instance \IZA (dengan Timeout cepat 2 detik)
-            string connStrWithInstance = $"Data Source={ipAddress}\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True;Connection Timeout=2;";
-            try
-            {
-                using (SqlConnection testConn = new SqlConnection(connStrWithInstance))
-                {
-                    testConn.Open();
-                    return connStrWithInstance;
-                }
-            }
-            catch {}
-
-            // 2. Coba menggunakan IP Address saja (jika di-test di default instance PC dosen)
-            string connStrDefault = $"Data Source={ipAddress};Initial Catalog=DBAkademikADO;Integrated Security=True;Connection Timeout=2;";
-            try
-            {
-                using (SqlConnection testConn = new SqlConnection(connStrDefault))
-                {
-                    testConn.Open();
-                    return connStrDefault;
-                }
-            }
-            catch {}
-
-            // 3. Fallback ke Server Lokal IZAYAAA\IZA (Pasti berhasil di PC lokal Anda)
-            return "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True;";
+            string connectionString = $"Data Source={GetLoacalIPAddress()}\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True;";
+            return connectionString;
         }
 
         SqlConnection conn = new SqlConnection(GetConnectionString());
