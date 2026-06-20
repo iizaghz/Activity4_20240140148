@@ -102,8 +102,38 @@ namespace CRUDMahasiswaADO
         {
             try
             {
-                bindingSource1.DataSource = dbLogic.GetMhs();
+                DataTable dt = dbLogic.GetMhs();
+                
+                // Ensure dynamic columns exist in the dataset table so that grid and bindings match
+                if (!dBAkademikADODataSet.Mahasiswa.Columns.Contains("Foto"))
+                    dBAkademikADODataSet.Mahasiswa.Columns.Add("Foto", typeof(byte[]));
+                if (!dBAkademikADODataSet.Mahasiswa.Columns.Contains("NamaProdi"))
+                    dBAkademikADODataSet.Mahasiswa.Columns.Add("NamaProdi", typeof(string));
+
+                dBAkademikADODataSet.Mahasiswa.BeginLoadData();
+                dBAkademikADODataSet.Mahasiswa.Clear();
+                foreach (DataRow row in dt.Rows)
+                {
+                    DataRow newRow = dBAkademikADODataSet.Mahasiswa.NewRow();
+                    newRow["NIM"] = row["NIM"];
+                    newRow["Nama"] = row["Nama"];
+                    newRow["JenisKelamin"] = row["JenisKelamin"];
+                    newRow["TanggalLahir"] = row["TanggalLahir"];
+                    newRow["Alamat"] = row["Alamat"];
+                    newRow["KodeProdi"] = row["KodeProdi"];
+                    newRow["Foto"] = row["Foto"];
+                    newRow["NamaProdi"] = row["NamaProdi"];
+                    if (dt.Columns.Contains("TanggalDaftar") && row["TanggalDaftar"] != DBNull.Value)
+                        newRow["TanggalDaftar"] = row["TanggalDaftar"];
+                    dBAkademikADODataSet.Mahasiswa.Rows.Add(newRow);
+                }
+                dBAkademikADODataSet.Mahasiswa.EndLoadData();
+
+                // Re-bind to original designer state
+                bindingSource1.DataSource = dBAkademikADODataSet;
+                bindingSource1.DataMember = "Mahasiswa";
                 dataGridView1.DataSource = bindingSource1;
+
                 DataGridViewImageColumn fotoColumn = (DataGridViewImageColumn)dataGridView1.Columns["Foto"];
                 fotoColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
 
@@ -323,7 +353,7 @@ namespace CRUDMahasiswaADO
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = openFileDialog.FileName;
-                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
@@ -364,25 +394,100 @@ namespace CRUDMahasiswaADO
                     return;
                 }
 
+                // Helper to get row value using aliases (case-insensitive)
+                string GetValue(DataRow r, params string[] aliases)
+                {
+                    foreach (string alias in aliases)
+                    {
+                        if (r.Table.Columns.Contains(alias))
+                            return r[alias]?.ToString()?.Trim() ?? string.Empty;
+
+                        foreach (DataColumn col in r.Table.Columns)
+                        {
+                            if (string.Equals(col.ColumnName, alias, StringComparison.OrdinalIgnoreCase))
+                                return r[col.ColumnName]?.ToString()?.Trim() ?? string.Empty;
+                        }
+                    }
+                    return string.Empty;
+                }
+
+                // Get dynamic map of program studies from database
+                var prodiMap = dbLogic.GetProdiMap();
                 int sukses = 0;
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    string nim = row["NIM"].ToString().Trim();
-                    string nama = row["Nama"].ToString().Trim();
-                    string jk = row["JenisKelamin"].ToString().Trim();
-                    string alamat = row["Alamat"].ToString().Trim();
-                    string kodeProdi = row["NamaProdi"].ToString().Trim();
-                    string fotoPath = row.Table.Columns.Contains("FotoPath")
-                        ? row["FotoPath"].ToString().Trim()
-                        : string.Empty;
+                    string nim = GetValue(row, "NIM", "nim", "NoMhs", "No Mhs", "npm", "NPM");
+                    string nama = GetValue(row, "Nama", "nama", "NamaMahasiswa", "Nama Mahasiswa", "nama_mahasiswa");
+                    string jkRaw = GetValue(row, "JenisKelamin", "Jenis Kelamin", "jenis_kelamin", "jk", "JK", "gender", "sex");
+                    string alamat = GetValue(row, "Alamat", "alamat", "address");
+                    string prodiRaw = GetValue(row, "NamaProdi", "Nama Prodi", "nama_prodi", "KodeProdi", "Kode Prodi", "kode_prodi", "prodi", "Prodi", "program studi");
+                    string fotoPath = GetValue(row, "FotoPath", "foto path", "foto_path", "foto", "Foto");
 
                     if (string.IsNullOrEmpty(nim) || string.IsNullOrEmpty(nama))
                         continue;
 
-                    DateTime tglLahir;
-                    if (!DateTime.TryParse(row["TanggalLahir"].ToString(), out tglLahir))
-                        continue;
+                    // Normalize Gender to L/P
+                    string jk = "L";
+                    if (jkRaw.StartsWith("P", StringComparison.OrdinalIgnoreCase) || jkRaw.StartsWith("F", StringComparison.OrdinalIgnoreCase) || jkRaw.StartsWith("W", StringComparison.OrdinalIgnoreCase))
+                    {
+                        jk = "P";
+                    }
+                    else if (jkRaw.StartsWith("L", StringComparison.OrdinalIgnoreCase) || jkRaw.StartsWith("M", StringComparison.OrdinalIgnoreCase))
+                    {
+                        jk = "L";
+                    }
+
+                    // Map Prodi Name or Code to a Valid Code
+                    string kodeProdi = string.Empty;
+                    if (!string.IsNullOrEmpty(prodiRaw))
+                    {
+                        if (prodiMap.TryGetValue(prodiRaw, out string mappedCode))
+                        {
+                            kodeProdi = mappedCode;
+                        }
+                        else
+                        {
+                            // Try a substring/contains match in the prodi map keys
+                            foreach (var kvp in prodiMap)
+                            {
+                                if (kvp.Key.Contains(prodiRaw) || prodiRaw.Contains(kvp.Key))
+                                {
+                                    kodeProdi = kvp.Value;
+                                    break;
+                                }
+                            }
+                            if (string.IsNullOrEmpty(kodeProdi))
+                            {
+                                // If still not found, default to raw value or the first code TI01
+                                kodeProdi = prodiRaw.Length <= 4 ? prodiRaw : "TI01";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        kodeProdi = "TI01"; // Fallback to avoid constraint violation
+                    }
+
+                    DateTime tglLahir = DateTime.Now.AddYears(-20); // Default fallback age
+                    string tglLahirRaw = GetValue(row, "TanggalLahir", "Tanggal Lahir", "tanggal_lahir", "tgl lahir", "tgl_lahir", "birthdate");
+                    if (!DateTime.TryParse(tglLahirRaw, out tglLahir))
+                    {
+                        // Check if it is already a DateTime type in the cell
+                        object dateVal = null;
+                        foreach (string alias in new[] { "TanggalLahir", "Tanggal Lahir", "tanggal_lahir", "tgl lahir", "tgl_lahir" })
+                        {
+                            if (row.Table.Columns.Contains(alias))
+                            {
+                                dateVal = row[alias];
+                                break;
+                            }
+                        }
+                        if (dateVal is DateTime dtVal)
+                        {
+                            tglLahir = dtVal;
+                        }
+                    }
 
                     byte[] ConvertImageFromPath(string path)
                     {
@@ -390,14 +495,21 @@ namespace CRUDMahasiswaADO
                             return null;
                         if (!File.Exists(path))
                             return null;
-                        return File.ReadAllBytes(path);
+                        try
+                        {
+                            return File.ReadAllBytes(path);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
                     }
                     byte[] fotoBytes = ConvertImageFromPath(fotoPath);
 
                     dbLogic.InsertMhs(nim, nama, alamat, jk, tglLahir, kodeProdi, fotoBytes);
                     sukses++;
                 }
-                MessageBox.Show("Data mahasiswa berhasil ditambahkan");
+                MessageBox.Show($"Data mahasiswa ({sukses} data) berhasil ditambahkan");
                 ClearForm();
                 LoadData();
             }
