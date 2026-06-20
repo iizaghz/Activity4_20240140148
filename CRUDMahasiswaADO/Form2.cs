@@ -15,11 +15,7 @@ namespace CRUDMahasiswaADO
 {
     public partial class Form2 : Form
     {
-        static string connectionString =
-            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True";
-
-        SqlConnection conn = new SqlConnection(connectionString);
-        SqlDataAdapter da;
+        DAL dbLogic = new DAL();
         DataTable dtMahasiswa;
         DataTable dtProdi;
 
@@ -53,21 +49,7 @@ namespace CRUDMahasiswaADO
 
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
-
-                SqlCommand cmd = new SqlCommand(
-                    "select namaprodi from programstudi",
-                    conn);
-
-                cmd.CommandType = CommandType.Text;
-
-                dtProdi = new DataTable();
-                da = new SqlDataAdapter(cmd);
-
-                da.Fill(dtProdi);
+                dtProdi = dbLogic.getProdi();
 
                 comboBox1.DataSource = dtProdi;
                 comboBox1.DisplayMember = "namaprodi";
@@ -83,25 +65,10 @@ namespace CRUDMahasiswaADO
         {
             try
             {
-                if (conn.State == ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
-
-                SqlCommand cmd = new SqlCommand("sp_Report", conn);
-
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.Add("@inProdi", SqlDbType.VarChar, 50)
-                    .Value = comboBox1.SelectedValue;
-
-                cmd.Parameters.Add("@inTglMsuk", SqlDbType.VarChar, 4)
-                    .Value = dateTimePicker1.Value.Year.ToString();
-
-                da = new SqlDataAdapter(cmd);
-
-                dtMahasiswa = new DataTable();
-                da.Fill(dtMahasiswa);
+                dtMahasiswa = dbLogic.getDataRekap(
+                    comboBox1.SelectedValue.ToString(),
+                    dateTimePicker1.Value
+                );
 
                 dataGridView1.DataSource = dtMahasiswa;
 
