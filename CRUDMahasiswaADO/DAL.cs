@@ -31,7 +31,7 @@ namespace CRUDMahasiswaADO
 
         public static string GetConnectionString()
         {
-            string connectionString = $"Data Source={GetLoacalIPAddress()};Initial Catalog=DBAkademikADO;User ID=sa;Password=PasswordSA;";
+            string connectionString = $"Data Source={GetLoacalIPAddress()};Initial Catalog=DBAkademikADO;Integrated Security=True;";
             return connectionString;
         }
 
