@@ -137,6 +137,11 @@ namespace CRUDMahasiswaADO
                 DataGridViewImageColumn fotoColumn = (DataGridViewImageColumn)dataGridView1.Columns["Foto"];
                 fotoColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
 
+                if (dataGridView1.Columns.Contains("TanggalDaftar"))
+                {
+                    dataGridView1.Columns["TanggalDaftar"].Visible = false;
+                }
+
                 HitungTotal();
                 foreach (DataGridViewColumn col in dataGridView1.Columns)
                 {
@@ -174,6 +179,7 @@ namespace CRUDMahasiswaADO
             {
                 byte[] ConvertImageToBytes(PictureBox pb)
                 {
+                    if (pb.Image == null) return null;
                     using (MemoryStream ms = new MemoryStream())
                     {
                         pb.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -204,6 +210,7 @@ namespace CRUDMahasiswaADO
             {
                 byte[] ConvertImageToBytes(PictureBox pb)
                 {
+                    if (pb.Image == null) return null;
                     using (MemoryStream ms = new MemoryStream())
                     {
                         pb.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -267,11 +274,11 @@ namespace CRUDMahasiswaADO
                 cmbJK.Text = row[2].ToString();
                 dtpTanggalLahir.Value = Convert.ToDateTime(row[3]);
                 txtAlamat.Text = row[4].ToString();
-                txtKodeProdi.Text = row[6].ToString();
+                txtKodeProdi.Text = row[5].ToString();
 
-                if (row[5] != DBNull.Value)
+                if (row[7] != DBNull.Value)
                 {
-                    byte[] imgBytes = (byte[])row[5];
+                    byte[] imgBytes = (byte[])row[7];
                     using (MemoryStream ms = new MemoryStream(imgBytes))
                     {
                         fotoMhs.Image = Image.FromStream(ms);
@@ -293,6 +300,7 @@ namespace CRUDMahasiswaADO
             {
                 dbLogic.resetData();
                 MessageBox.Show("Data berhasil direset");
+                ClearForm();
                 LoadData();
             }
             catch (SqlException ex)

@@ -209,7 +209,7 @@ namespace CRUDMahasiswaADO
             {
                 SqlCommand cmd = new SqlCommand("sp_DeleteMahasiswa", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@pNIM", nim);
+                cmd.Parameters.AddWithValue("@NIM", nim);
 
                 cmd.ExecuteNonQuery();
             }
@@ -232,9 +232,6 @@ namespace CRUDMahasiswaADO
             {
                 SqlCommand cmdDelete = new SqlCommand("delete from mahasiswa;", conn, trans);
                 cmdDelete.ExecuteNonQuery();
-
-                SqlCommand cmdInsert = new SqlCommand("insert into mahasiswa (NIM, Nama, JenisKelamin, TanggalLahir, Alamat, KodeProdi, TanggalDaftar, Foto) select NIM, Nama, JenisKelamin, TanggalLahir, Alamat, KodeProdi, TanggalDaftar, NULL from mahasiswa_backup;", conn, trans);
-                cmdInsert.ExecuteNonQuery();
 
                 trans.Commit();
             }
