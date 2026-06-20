@@ -31,8 +31,34 @@ namespace CRUDMahasiswaADO
 
         public static string GetConnectionString()
         {
-            string connectionString = $"Data Source={GetLoacalIPAddress()};Initial Catalog=DBAkademikADO;Integrated Security=True;";
-            return connectionString;
+            string ipAddress = GetLoacalIPAddress();
+            
+            // 1. Coba menggunakan IP Address + Instance \IZA (dengan Timeout cepat 2 detik)
+            string connStrWithInstance = $"Data Source={ipAddress}\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True;Connection Timeout=2;";
+            try
+            {
+                using (SqlConnection testConn = new SqlConnection(connStrWithInstance))
+                {
+                    testConn.Open();
+                    return connStrWithInstance;
+                }
+            }
+            catch {}
+
+            // 2. Coba menggunakan IP Address saja (jika di-test di default instance PC dosen)
+            string connStrDefault = $"Data Source={ipAddress};Initial Catalog=DBAkademikADO;Integrated Security=True;Connection Timeout=2;";
+            try
+            {
+                using (SqlConnection testConn = new SqlConnection(connStrDefault))
+                {
+                    testConn.Open();
+                    return connStrDefault;
+                }
+            }
+            catch {}
+
+            // 3. Fallback ke Server Lokal IZAYAAA\IZA (Pasti berhasil di PC lokal Anda)
+            return "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True;";
         }
 
         SqlConnection conn = new SqlConnection(GetConnectionString());
