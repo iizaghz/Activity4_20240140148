@@ -1,20 +1,41 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace CRUDMahasiswaADO
 {
     public class DAL
     {
-        static string connectionString =
-            "Data Source=IZAYAAA\\IZA;Initial Catalog=DBAkademikADO;Integrated Security=True";
-
-        public string GetConnectionString()
+        public static string GetLoacalIPAddress()
         {
+            string localIP = string.Empty;
+            try
+            {
+                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        localIP = ip.ToString();
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error getting local IP address: " + ex.Message);
+            }
+            return localIP;
+        }
+
+        public static string GetConnectionString()
+        {
+            string connectionString = $"Data Source={GetLoacalIPAddress()};Initial Catalog=DBAkademikADO;User ID=sa;Password=PasswordSA;";
             return connectionString;
         }
 
-        SqlConnection conn = new SqlConnection(connectionString);
+        SqlConnection conn = new SqlConnection(GetConnectionString());
 
         SqlDataAdapter da;
         DataTable dtMahasiswa;
